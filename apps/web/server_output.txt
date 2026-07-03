@@ -1,0 +1,41 @@
+ ⚠ Invalid next.config.ts options detected: 
+ ⚠     Unrecognized key(s) in object: 'outputFileTracing'
+ ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+   ▲ Next.js 15.5.19
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.75:3000
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · serverActions
+
+ ✓ Starting...
+ ✓ Ready in 1427ms
+ ✓ Compiled /middleware in 160ms (222 modules)
+ ○ Compiling / ...
+Warning: Your PostCSS configuration defines a field which is not supported (`__esModule`). Please remove this configuration value.
+ ⨯ app/layout.tsx
+An error occurred in `next/font`.
+
+Error: Your custom PostCSS configuration must export a `plugins` key.
+    at getPostCssPlugins (/Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:114:37)
+    at async /Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/config/blocks/css/index.js:125:36
+    at async /Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js:94:33
+    at async Span.traceAsyncFn (/Users/apple/Documents/freebuff-codebase/node_modules/next/dist/trace/trace.js:157:20)
+ ⨯ app/layout.tsx
+An error occurred in `next/font`.
+
+Error: Your custom PostCSS configuration must export a `plugins` key.
+    at getPostCssPlugins (/Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:114:37)
+    at async /Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/config/blocks/css/index.js:125:36
+    at async /Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js:94:33
+    at async Span.traceAsyncFn (/Users/apple/Documents/freebuff-codebase/node_modules/next/dist/trace/trace.js:157:20)
+ ⨯ app/layout.tsx
+An error occurred in `next/font`.
+
+Error: Your custom PostCSS configuration must export a `plugins` key.
+    at getPostCssPlugins (/Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:114:37)
+    at async /Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/config/blocks/css/index.js:125:36
+    at async /Users/apple/Documents/freebuff-codebase/node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js:94:33
+    at async Span.traceAsyncFn (/Users/apple/Documents/freebuff-codebase/node_modules/next/dist/trace/trace.js:157:20)
+ GET / 500 in 2884ms
+[?25h

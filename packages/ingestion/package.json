@@ -1,0 +1,28 @@
+{
+  "name": "@codebuff/ingestion",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@codebuff/database": "*",
+    "@codebuff/shared": "*",
+    "simple-git": "^3.27.0",
+    "ignore": "^7.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/node": "^22.14.0"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "ai-codebase-reverse-engineer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-powered cybersecurity platform for analyzing codebases, repositories, and websites",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "db:generate": "cd packages/database && npx drizzle-kit generate",
+    "db:push": "cd packages/database && npx drizzle-kit push",
+    "db:studio": "cd packages/database && npx drizzle-kit studio"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.0",
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "npm@11.11.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
