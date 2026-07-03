@@ -63,6 +63,13 @@ class JobQueue {
   /** Start the processing loop — polls DB every second for queued jobs */
   start() {
     if (this.running) return;
+
+    // Don't start if no database URL is configured
+    if (!process.env.DATABASE_URL) {
+      console.warn("[queue] DATABASE_URL not set — queue not started");
+      return;
+    }
+
     this.running = true;
     console.log("[queue] Job processing loop started");
     this.pollNext();
@@ -74,6 +81,13 @@ class JobQueue {
 
   private async pollNext() {
     if (!this.running) return;
+
+    // Safety check: if DATABASE_URL was removed at runtime, stop polling
+    if (!process.env.DATABASE_URL) {
+      console.warn("[queue] DATABASE_URL not set — stopping queue");
+      this.running = false;
+      return;
+    }
 
     try {
       const pending = await db

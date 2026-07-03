@@ -4,9 +4,6 @@ import { repositoryService, analysisService, securityService, activityService } 
 import { jobQueue } from "@/lib/services/queue";
 import { initializeApp } from "@/lib/services/init";
 
-// Ensure the queue is running
-initializeApp();
-
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -53,6 +50,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Initialize background job queue for analysis
+    initializeApp();
+
     const { userId: clerkId } = await auth();
     if (!clerkId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

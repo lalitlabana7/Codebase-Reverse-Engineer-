@@ -3,11 +3,10 @@ import { sql } from "drizzle-orm";
 import { db } from "@codebuff/database";
 import { initializeApp } from "@/lib/services/init";
 
-// Ensure the job queue is running (health endpoint is public, so this ensures
-// the queue starts even before any authenticated API route is called)
-initializeApp();
-
 export async function GET() {
+  // Ensure the job queue is running (health endpoint is public, so this ensures
+  // the queue starts even before any authenticated API route is called)
+  initializeApp();
   let databaseStatus = "disconnected";
 
   try {

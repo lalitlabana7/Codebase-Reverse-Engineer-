@@ -4,9 +4,6 @@ import { userService, repositoryService, analysisService, activityService } from
 import { jobQueue } from "@/lib/services/queue";
 import { initializeApp } from "@/lib/services/init";
 
-// Initialize app services on first load
-initializeApp();
-
 /** Ensure the user exists in our database (fallback if Clerk webhook hasn't synced) */
 async function ensureUser(clerkId: string) {
   let userData = await userService.findByClerkId(clerkId);
@@ -61,6 +58,9 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    // Initialize background job queue for analysis
+    initializeApp();
+
     const { userId: clerkId } = await auth();
     if (!clerkId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
