@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { analysisService, userService } from "@/lib/services/database";
-import { jobQueue } from "@/lib/services/queue";
 
 export async function GET(req: NextRequest) {
   try {
@@ -55,16 +54,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to create analysis" }, { status: 500 });
     }
 
-    // Enqueue analysis job
-    const jobId = await jobQueue.enqueue("analyze_repository", {
-      repositoryId,
-      analysisId: analysis.id,
-    });
-
     return NextResponse.json({
       analysis,
-      jobId,
-      status: "queued",
+      status: "created",
+      message: "Analysis record created. Trigger re-analysis from the repository page.",
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

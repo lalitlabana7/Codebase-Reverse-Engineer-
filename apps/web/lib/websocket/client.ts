@@ -4,11 +4,28 @@ import { useEffect, useRef, useCallback } from "react";
 
 type WSEventHandler = (payload: Record<string, unknown>) => void;
 
+/**
+ * WebSocket hook for real-time updates.
+ * NOTE: WebSocket connections are not supported on Vercel serverless.
+ * This hook gracefully degrades (logs a warning) in serverless environments
+ * and falls back to polling-based updates via React Query.
+ */
 export function useWebSocket() {
   const wsRef = useRef<WebSocket | null>(null);
   const handlersRef = useRef<Map<string, WSEventHandler[]>>(new Map());
+  const isServerless =
+    typeof window !== "undefined" &&
+    window.location.hostname.includes("vercel.app");
 
   const connect = useCallback(() => {
+    // WebSockets are not supported on Vercel serverless
+    if (isServerless) {
+      if (typeof console !== "undefined") {
+        console.log("[WS] WebSocket unavailable on serverless — using polling");
+      }
+      return;
+    }
+
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const url = `${protocol}//${window.location.host}/api/ws`;
 
@@ -26,21 +43,23 @@ export function useWebSocket() {
         if (handlers) {
           handlers.forEach((handler) => handler(message.payload));
         }
-      } catch (error) {
-        console.error("WebSocket message error:", error);
+      } catch {
+        // Ignore malformed messages
       }
     };
 
     ws.onclose = () => {
-      console.log("WebSocket disconnected, reconnecting...");
-      setTimeout(connect, 3000);
+      console.log("WebSocket disconnected");
+      // Don't auto-reconnect on Vercel
+      if (!isServerless) {
+        setTimeout(connect, 3000);
+      }
     };
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
+    ws.onerror = () => {
       ws.close();
     };
-  }, []);
+  }, [isServerless]);
 
   useEffect(() => {
     connect();
@@ -55,7 +74,6 @@ export function useWebSocket() {
       handlers.push(handler);
       handlersRef.current.set(event, handlers);
 
-      // Send subscription to server
       if (wsRef.current?.readyState === WebSocket.OPEN) {
         wsRef.current.send(
           JSON.stringify({ type: "subscribe", payload: { event } })

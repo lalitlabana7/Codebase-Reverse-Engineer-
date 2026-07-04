@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
     ],
   },
   transpilePackages: ["@codebuff/database", "@codebuff/shared", "@codebuff/ingestion"],
+  // Ensure API routes use Node.js runtime (not Edge) for Neon DB + GitHub API
+  serverExternalPackages: ["@neondatabase/serverless"],
 };
 
 export default nextConfig;

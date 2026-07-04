@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { userService, repositoryService, analysisService, activityService } from "@/lib/services/database";
-import { jobQueue } from "@/lib/services/queue";
-import { initializeApp } from "@/lib/services/init";
 
 /** Ensure the user exists in our database (fallback if Clerk webhook hasn't synced) */
 async function ensureUser(clerkId: string) {
@@ -58,9 +56,6 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    // Initialize background job queue for analysis
-    initializeApp();
-
     const { userId: clerkId } = await auth();
     if (!clerkId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -74,6 +69,13 @@ export async function POST(req: NextRequest) {
 
     if (!url) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
+    }
+
+    // Validate that it's a GitHub URL (required for API-based analysis)
+    if (!url.includes("github.com")) {
+      return NextResponse.json({
+        error: "Only GitHub repositories are supported currently. Please provide a GitHub URL.",
+      }, { status: 400 });
     }
 
     // Create repository in database
@@ -101,22 +103,13 @@ export async function POST(req: NextRequest) {
       metadata: { repositoryId: repo.id, url },
     });
 
-    // Enqueue background job for analysis
-    const jobId = await jobQueue.enqueue("analyze_repository", {
-      repositoryId: repo.id,
-      analysisId: analysis?.id,
-      url,
-      branch: branch || "main",
-      githubToken,
-      userId: userData.id,
-    });
-
+    // Analysis runs on-demand when the user first opens the repository page.
+    // The GET /api/repositories/[id] handler triggers it if the status is "queued".
     return NextResponse.json({
       repository: repo,
       analysisId: analysis?.id,
-      jobId,
       status: "queued",
-      message: "Repository queued for analysis",
+      message: "Repository connected. Open the repository page to start analysis.",
     });
   } catch (error: any) {
     console.error("Error creating repository:", error);
