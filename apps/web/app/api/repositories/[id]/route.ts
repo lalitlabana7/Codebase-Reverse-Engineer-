@@ -145,26 +145,3 @@ export async function DELETE(
     );
   }
 }
-
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { userId: clerkId } = await auth();
-    if (!clerkId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { id } = await params;
-    await repositoryService.delete(id);
-
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error("Error deleting repository:", error);
-    return NextResponse.json(
-      { error: "Failed to delete repository" },
-      { status: 500 }
-    );
-  }
-}
